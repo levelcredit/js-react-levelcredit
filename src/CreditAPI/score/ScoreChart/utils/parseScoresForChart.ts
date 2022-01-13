@@ -9,19 +9,21 @@ type ChartMinScore = number | null;
 type ChartMaxScore = number | null;
 
 export default function parseScoresForChart(
-  scores: ScoreObject | null,
+  scores: ScoreObject[] | null,
   style: ChartScoreParseStyle
 ): ChartScoreParsedData {
-  if (!scores?.scores) {
+  if (!scores || scores.length === 0 || !scores[0]?.scores) {
     return [[], null, null];
   }
+
+  const scores_by_dates = scores[0].scores;
 
   let score_data: Array<ChartScoreData>;
 
   if (style === "11-months-past") {
-    score_data = parseStyle11Months(scores.scores);
+    score_data = parseStyle11Months(scores_by_dates);
   } else if (style === "12-scores") {
-    score_data = parseStyle12Scores(scores.scores);
+    score_data = parseStyle12Scores(scores_by_dates);
   } else {
     return [[], null, null];
   }
@@ -43,15 +45,13 @@ function parseStyle12Scores(scores: ScoreObjectScores): Array<ChartScoreData> {
       return parseInt(score);
     });
 
-  const scores_data = scores_dates
+  return scores_dates
     .map(function (date_string, i) {
       const date = dayjs(date_string, "YYYY-MM-DD");
 
       return { month: date.format("MMM"), date: date.format("MMM D, YYYY"), score: scores_list[i] };
     })
     .reverse();
-
-  return scores_data;
 }
 
 function parseStyle11Months(scores: ScoreObjectScores): Array<ChartScoreData> {
