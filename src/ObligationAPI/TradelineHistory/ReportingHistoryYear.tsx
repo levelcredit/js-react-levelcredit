@@ -5,6 +5,7 @@ import ReportingCheck from "./assets/ReportingCheck";
 import ReportingDot from "./assets/ReportingDot";
 import {
   PENDING_REPORT,
+  PENDING_VERIFICATION,
   PENDING_REPORT_HOLD,
   POSITIVE_LOOKBACK_AVAILABLE,
   POSITIVE_LOOKBACK_REPORT,
@@ -103,6 +104,12 @@ function ReportingHistoryStatus(props: ReportingHistoryStatusProps) {
     case PENDING_REPORT_HOLD:
       return (
         <span className={classes[PENDING_REPORT_HOLD]}>
+          <ReportingCheck />
+        </span>
+      );
+    case PENDING_VERIFICATION:
+      return (
+        <span className={classes[PENDING_VERIFICATION]}>
           <ReportingCheck />
         </span>
       );
@@ -224,6 +231,12 @@ const styles: unknown = {
     extend: "TableColumnStatus",
 
     "& svg": { fill: "#777" },
+  },
+
+  [PENDING_VERIFICATION]: {
+    extend: "TableColumnStatus",
+
+    "& svg": { fill: "#dd0" },
   },
 
   [NEGATIVE_LATE_30]: {
