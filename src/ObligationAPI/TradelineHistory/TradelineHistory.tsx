@@ -56,7 +56,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
   if (!start_date.year || start_date.year > (end_date.year || 0) - 2) {
     setShowAll(true);
   }
-  const start_date_year = show_all ? start_date.year || 0 : (end_date.year || 0) - 2;
+  const start_date_year = show_all || !end_date.year ? start_date.year || 0 : (end_date.year || 0) - 2;
 
   return (
     <div>
@@ -89,7 +89,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
       </table>
       {!show_all && (
         <div className="filter" onClick={() => setShowAll(true)}>
-          Show more...
+          Show more
         </div>
       )}
     </div>
