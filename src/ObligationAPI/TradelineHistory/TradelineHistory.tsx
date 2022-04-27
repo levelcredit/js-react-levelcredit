@@ -30,6 +30,7 @@ const months_loop = new Array(12).fill(0);
 
 function TradelineHistory(props: TradelineHistoryProps) {
   const [tradeline, setTradeline] = useState<ObligationTradelineObject>({});
+  const [show_all, setShowAll] = useState<boolean>(false);
   const mounted = useIsMounted();
 
   const classes = props.classes;
@@ -52,34 +53,46 @@ function TradelineHistory(props: TradelineHistoryProps) {
     [fetchTradeline, mounted, obligation, obligation_id]
   );
 
+  if (!start_date.year || start_date.year > (end_date.year || 0) - 2) {
+    setShowAll(true);
+  }
+  const start_date_year = show_all || !end_date.year ? start_date.year || 0 : (end_date.year || 0) - 2;
+
   return (
-    <table className={classes.TradelineHistory} cellSpacing={0}>
-      <thead className={classes.TableHead}>
-        <tr>
-          <th className={classes.TableColumnHead} />
-          {months_loop.map(function (val, i) {
+    <div>
+      <table className={classes.TradelineHistory} cellSpacing={0}>
+        <thead className={classes.TableHead}>
+          <tr>
+            <th className={classes.TableColumnHead} />
+            {months_loop.map(function (val, i) {
+              return (
+                <th key={i} className={classes.TableColumnHead}>
+                  {dayjs().month(i).format("MMM").charAt(0)}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody className={classes.TableBody}>
+          {new Array((end_date.year || 0) - start_date_year + 1).fill(0).map(function (val, i) {
             return (
-              <th key={i} className={classes.TableColumnHead}>
-                {dayjs().month(i).format("MMM").charAt(0)}
-              </th>
+              <ReportingHistoryYear
+                key={i}
+                year={(end_date.year || current_year) - i}
+                tradeline={tradeline}
+                start_date={start_date}
+                classes={classes}
+              />
             );
           })}
-        </tr>
-      </thead>
-      <tbody className={classes.TableBody}>
-        {new Array((end_date.year || 0) - (start_date.year || 0) + 1).fill(0).map(function (val, i) {
-          return (
-            <ReportingHistoryYear
-              key={i}
-              year={(end_date.year || current_year) - i}
-              tradeline={tradeline}
-              start_date={start_date}
-              classes={classes}
-            />
-          );
-        })}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+      {!show_all && (
+        <div className="filter" onClick={() => setShowAll(true)}>
+          Show more
+        </div>
+      )}
+    </div>
   );
 }
 
