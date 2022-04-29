@@ -14,6 +14,7 @@ type TradelineHistoryProps = {
     TableHead?: string;
     TableColumnHead?: string;
     TableBody?: string;
+    Filter?: string;
   } & ReportingHistoryYearClasses;
   obligation: ObligationType;
   obligation_id: number;
@@ -36,7 +37,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
   const classes = props.classes;
   const obligation = props.obligation;
   const obligation_id = props.obligation_id;
-  const data_style: TradelineHistoryDataStyle = props.data_style || "last-24-months";
+  const data_style: TradelineHistoryDataStyle = show_all ? "all" : props.data_style || "last-24-datasets";
   const fetchTradeline = useObligationTradeline();
   const { start_date, end_date } = getTradelineDateRange(Object.keys(tradeline), data_style);
 
@@ -53,10 +54,10 @@ function TradelineHistory(props: TradelineHistoryProps) {
     [fetchTradeline, mounted, obligation, obligation_id]
   );
 
+  let show_more_button = !show_all;
   if (!start_date.year || start_date.year > (end_date.year || 0) - 2) {
-    setShowAll(true);
+    show_more_button = false;
   }
-  const start_date_year = show_all || !end_date.year ? start_date.year || 0 : (end_date.year || 0) - 2;
 
   return (
     <div>
@@ -74,7 +75,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
           </tr>
         </thead>
         <tbody className={classes.TableBody}>
-          {new Array((end_date.year || 0) - start_date_year + 1).fill(0).map(function (val, i) {
+          {new Array((end_date.year || 0) - (start_date.year || 0) + 1).fill(0).map(function (val, i) {
             return (
               <ReportingHistoryYear
                 key={i}
@@ -87,8 +88,8 @@ function TradelineHistory(props: TradelineHistoryProps) {
           })}
         </tbody>
       </table>
-      {!show_all && (
-        <div className="filter" onClick={() => setShowAll(true)}>
+      {show_more_button && (
+        <div className={classes.Filter} onClick={() => setShowAll(true)}>
           Show more
         </div>
       )}
@@ -108,6 +109,11 @@ const styles: unknown = {
     width: 32,
   },
   TableBody: {},
+  Filter: {
+    cursor: "pointer",
+    marginTop: "20px",
+    color: "#18b798",
+  },
 };
 
 export default injectSheet(styles as Styles)(TradelineHistory);
