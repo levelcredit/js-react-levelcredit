@@ -14,11 +14,17 @@ export default function getTradelineDateRange(
     date_list = date_list.slice(0, 24);
   }
 
-  date_list.map(function (date) {
+  date_list.forEach(function (date) {
     const [year, month] = date.split("-").map((s) => parseInt(s));
 
     if (data_style === "last-24-months") {
       if (last_24_months.year() > year || (last_24_months.year() === year && last_24_months.month() >= month)) {
+        return;
+      }
+    }
+
+    if (data_style === "last-24-months-including-year") {
+      if (last_24_months.year() > year) {
         return;
       }
     }
