@@ -37,7 +37,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
   const classes = props.classes;
   const obligation = props.obligation;
   const obligation_id = props.obligation_id;
-  const data_style: TradelineHistoryDataStyle = show_all ? "all" : props.data_style || "last-24-datasets";
+  const data_style: TradelineHistoryDataStyle = show_all ? "all" : props.data_style || "last-24-months-including-year";
   const fetchTradeline = useObligationTradeline();
   const { start_date, end_date } = getTradelineDateRange(Object.keys(tradeline), data_style);
 
