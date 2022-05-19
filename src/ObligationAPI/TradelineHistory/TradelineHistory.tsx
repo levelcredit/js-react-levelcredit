@@ -55,7 +55,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
   );
 
   let show_more_button = !show_all;
-  if (!start_date.year || start_date.year > (end_date.year || 0) - 2) {
+  if (!start_date.year || start_date.year >= (end_date.year || 0) - 2) {
     show_more_button = false;
   }
 
