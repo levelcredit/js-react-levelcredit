@@ -16,5 +16,9 @@ export type TradelineStatus =
   | "NO_PAYMENT";
 export type TransactionDetailsItem = { date: Date; amount: number; name: string; status: string | null };
 export type TradelineStringDateObject = { year: number | null; month: number | null };
-export type TradelineDateRange = { start_date: TradelineStringDateObject; end_date: TradelineStringDateObject };
+export type TradelineDateRange = {
+  original_start_date: TradelineStringDateObject;
+  start_date: TradelineStringDateObject;
+  end_date: TradelineStringDateObject;
+};
 export type TradelineHistoryDataStyle = "last-24-months-including-year" | "last-24-months" | "last-24-datasets" | "all";
