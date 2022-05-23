@@ -39,7 +39,7 @@ function TradelineHistory(props: TradelineHistoryProps) {
   const obligation_id = props.obligation_id;
   const data_style: TradelineHistoryDataStyle = show_all ? "all" : props.data_style || "last-24-months-including-year";
   const fetchTradeline = useObligationTradeline();
-  const { start_date, end_date } = getTradelineDateRange(Object.keys(tradeline), data_style);
+  const { original_start_date, start_date, end_date } = getTradelineDateRange(Object.keys(tradeline), data_style);
 
   useEffect(
     function () {
@@ -54,8 +54,8 @@ function TradelineHistory(props: TradelineHistoryProps) {
     [fetchTradeline, mounted, obligation, obligation_id]
   );
 
-  let show_more_button = !show_all;
-  if (!start_date.year || start_date.year >= (end_date.year || 0) - 2) {
+  let show_more_button = original_start_date.month !== start_date.month || original_start_date.year !== start_date.year;
+  if (!original_start_date.year || original_start_date.year > (end_date.year || 0) - 2) {
     show_more_button = false;
   }
 
